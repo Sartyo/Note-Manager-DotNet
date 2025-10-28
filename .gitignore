@@ -1,0 +1,4 @@
+bin
+obj
+appsetting.Development.json
+NoteManagerDotNet.http
