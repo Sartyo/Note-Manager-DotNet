@@ -1,4 +1,23 @@
-bin
-obj
-appsetting.Development.json
-NoteManagerDotNet.http
+# Visual Studio and Build Files
+##############################################
+[Bb]in/
+[Oo]bj/
+.vs/
+*.pdb
+*.suo
+*.user
+*.bak
+*.log
+
+# NuGet Packages
+##############################################
+# Packages directory
+**/packages/*
+
+# Http Request Files for testing since they may contain sensitive data
+##############################################
+*.http
+
+# Setting Files that override defaults for different environments
+##############################################
+appsettings.Development.json
