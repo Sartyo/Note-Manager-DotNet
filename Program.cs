@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var env = builder.Environment;
 
-builder.Services.AddDbContext<UserContext>(options =>
+builder.Services.AddDbContext<NoteManagerDbContext>(options =>
     // Pomelo syntax
     options.UseMySql(
         connectionString, 
@@ -25,6 +25,8 @@ builder.Services.AddDbContext<UserContext>(options =>
 
 // --- 2. Services Configuration ---
 builder.Services.AddScoped<IUserService, UserService>(); // Register the Service interface and implementation
+builder.Services.AddScoped<INoteService, NoteService>();
+builder.Services.AddScoped<ITagService, TagService>();
 
 // Add controllers, Swagger, etc.
 builder.Services.AddControllers();

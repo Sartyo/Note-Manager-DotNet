@@ -8,6 +8,8 @@ namespace NoteManagerDotNet.Models
         public byte[] PasswordHash { get; set; } = Array.Empty<byte>();
         public byte[] PasswordSalt { get; set; } = Array.Empty<byte>();
         public string Role { get; set; } = "User";
+        public ICollection<Note> Notes { get; set; } = new List<Note>();
+        public ICollection<Tag> Tags { get; set; } = new List<Tag>();
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }

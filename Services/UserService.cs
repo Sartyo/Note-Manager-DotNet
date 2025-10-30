@@ -10,10 +10,10 @@ namespace NoteManagerDotNet.Services
 {
     public class UserService : IUserService
     {
-        private readonly UserContext _context;
+        private readonly NoteManagerDbContext _context;
         private readonly IConfiguration _configuration;
 
-        public UserService(UserContext context, IConfiguration configuration)
+        public UserService(NoteManagerDbContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
