@@ -16,6 +16,11 @@ namespace NoteManagerDotNet.Services
 
         public async Task<Note?> CreateNoteAsync(NoteCreateDto noteDto, long userId)
         {
+            var titleExists = await _context.Notes.AnyAsync(n => n.UserId == userId && n.Title == noteDto.Title);
+            if (titleExists)
+            {
+                return null; // Or throw an exception if preferred
+            }
             var tags = await _tagService.GetOrCreateTagsAsync(noteDto.TagNames, userId);
 
             var note = new Note

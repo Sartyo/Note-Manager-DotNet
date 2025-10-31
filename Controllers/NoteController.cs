@@ -26,7 +26,15 @@ namespace NoteManagerDotNet.Controllers
             {
                 return Unauthorized("Invalid user ID.");
             }
+            if (noteDto.Title == null || noteDto.Content == null)
+            {
+                return BadRequest("Title and Content are required.");
+            }
             var note = await _noteService.CreateNoteAsync(noteDto, userId);
+            if (note == null)
+            {
+                return Conflict("A note with the same title already exists.");
+            }
             var responseDto = new NoteResponseDto
             {
                 Id = note?.Id ?? 0,
