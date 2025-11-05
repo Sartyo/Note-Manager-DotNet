@@ -72,5 +72,66 @@ namespace NoteManagerDotNet.Controllers
             return Ok(responseDto);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllNotes()
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdString) || !long.TryParse(userIdString, out long userId))
+            {
+                return Unauthorized("Invalid user ID.");
+            }
+            var notes = await _noteService.GetAllNotesAsync(userId);
+            var responseDtos = notes.Select(note => new NoteResponseDto
+            {
+                Id = note.Id,
+                Title = note.Title,
+                Content = note.Content,
+                CreatedAt = note.CreatedAt,
+                UpdatedAt = note.UpdatedAt,
+                TagNames = note.Tags.Select(t => t.Name).ToList()
+            }).ToList();
+            return Ok(responseDtos);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateNote(long id, [FromBody] NoteUpdateDto noteDto)
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdString) || !long.TryParse(userIdString, out long userId))
+            {
+                return Unauthorized("Invalid user ID.");
+            }
+            var note = await _noteService.UpdateNoteAsync(id, noteDto, userId);
+            if (note == null)
+            {
+                return NotFound("Note not found or title already exists.");
+            }
+            var responseDto = new NoteResponseDto
+            {
+                Id = note.Id,
+                Title = note.Title,
+                Content = note.Content,
+                CreatedAt = note.CreatedAt,
+                UpdatedAt = note.UpdatedAt,
+                TagNames = note.Tags.Select(t => t.Name).ToList()
+            };
+            return Ok(responseDto);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteNote(long id)
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdString) || !long.TryParse(userIdString, out long userId))
+            {
+                return Unauthorized("Invalid user ID.");
+            }
+            var success = await _noteService.DeleteNoteAsync(id, userId);
+            if (!success)
+            {
+                return NotFound("Note not found.");
+            }
+            return NoContent();
+        }
     }
 }
