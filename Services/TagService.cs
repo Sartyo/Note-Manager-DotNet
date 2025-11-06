@@ -31,6 +31,74 @@ namespace NoteManagerDotNet.Services
 
             await _context.Tags.AddRangeAsync(newTags);
             return existingTags.Concat(newTags).ToList();
-        } 
+        }
+
+        public async Task<Tag?> GetTagByNameAsync(string tagName, long userId)
+        {
+            return await _context.Tags
+                .FirstOrDefaultAsync(t => t.UserId == userId && t.Name == tagName);
+        }
+
+        public async Task<Tag?> CreateTagAsync(TagCreateDto tagDto, long userId)
+        {
+            var tagExists = await _context.Tags.AnyAsync(t => t.UserId == userId && t.Name == tagDto.Name);
+            if (tagExists)
+            {
+                return null; // Or throw an exception if preferred
+            }
+
+            var tag = new Tag
+            {
+                UserId = userId,
+                Name = tagDto.Name,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            _context.Tags.Add(tag);
+            await _context.SaveChangesAsync();
+            return tag;
+        }
+
+        public async Task<Tag?> UpdateTagAsync(long tagId, TagCreateDto tagDto, long userId)
+        {
+            var tag = await _context.Tags.FirstOrDefaultAsync(t => t.Id == tagId && t.UserId == userId);
+            if (tag == null)
+            {
+                return null;
+            }
+
+            tag.Name = tagDto.Name;
+            tag.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return tag;
+        }
+
+        public async Task<bool> DeleteTagAsync(long tagId, long userId)
+        {
+            var tag = await _context.Tags.FirstOrDefaultAsync(t => t.Id == tagId && t.UserId == userId);
+            if (tag == null)
+            {
+                return false;
+            }
+
+            _context.Tags.Remove(tag);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<List<Tag>> GetAllTagsAsync(long userId)
+        {
+            return await _context.Tags
+                .Where(t => t.UserId == userId)
+                .ToListAsync();
+        }
+
+        public async Task<Tag?> GetTagByIdAsync(long tagId, long userId)
+        {
+            return await _context.Tags
+                .FirstOrDefaultAsync(t => t.Id == tagId && t.UserId == userId);
+        }
     }
 }
