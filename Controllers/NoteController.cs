@@ -73,14 +73,25 @@ namespace NoteManagerDotNet.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllNotes()
+        public async Task<IActionResult> GetAllNotes(
+            [FromQuery] string? query,
+            [FromQuery] string? tags
+        )
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userIdString) || !long.TryParse(userIdString, out long userId))
             {
                 return Unauthorized("Invalid user ID.");
             }
-            var notes = await _noteService.GetAllNotesAsync(userId);
+
+            List<string> tagList = new List<string>();
+            if (!string.IsNullOrEmpty(tags))
+            {
+                tagList = tags.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(t => t.Trim())
+                    .ToList();
+            }
+            var notes = await _noteService.SearchNotesAsync(userId, query, tagList);
             var responseDtos = notes.Select(note => new NoteResponseDto
             {
                 Id = note.Id,

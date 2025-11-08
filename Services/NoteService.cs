@@ -102,5 +102,35 @@ namespace NoteManagerDotNet.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<List<Note>> SearchNotesAsync(long userId, string? query, List<string>? tags)
+        {
+            var notesQuery = _context.Notes
+                .Include(n => n.Tags)
+                .Where(n => n.UserId == userId);
+
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                string search = query.ToLower();
+                notesQuery = notesQuery.Where(n =>
+                    n.Title.ToLower().Contains(search) ||
+                    n.Content.ToLower().Contains(search)
+                );
+            }
+
+            if (tags != null && tags.Count > 0)
+            {
+                foreach (var tag in tags)
+                {
+                    notesQuery = notesQuery.Where(n =>
+                        n.Tags.Any(t => t.Name.ToLower() == tag.ToLower())
+                    );
+                }
+            }
+
+            return await notesQuery
+                .OrderByDescending(n => n.UpdatedAt)
+                .ToListAsync();
+        }
     }
 }

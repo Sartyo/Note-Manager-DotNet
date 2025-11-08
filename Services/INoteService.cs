@@ -9,5 +9,6 @@ namespace NoteManagerDotNet.Services
         Task<List<Note>> GetAllNotesAsync(long userId);
         Task<Note?> UpdateNoteAsync(long noteId, NoteUpdateDto noteDto, long userId);
         Task<bool> DeleteNoteAsync(long noteId, long userId);
+        Task<List<Note>> SearchNotesAsync(long userId, string? query, List<string>? tags);
     }
 }
