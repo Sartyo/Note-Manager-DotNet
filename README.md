@@ -10,6 +10,7 @@ This backend API is a note manager. It allows users to create notes and tags, an
 
 I use the following to build this API:
 
+* **.NET SDK 9.0**
 * **ASP.NET Core** as the framework
 * **MySQL** for handling the database
 * **JWT** for authentication
@@ -25,7 +26,7 @@ If you want to try out the API on your own machine, you can do the following (it
     ```bash
     git clone https://github.com/Sartyo/Note-Manager-DotNet.git
     ```
-2.  Restore the packages that the project needs (the ones that appear on the .csproj file on the root folder) by executing the command:
+2.  Restore the packages that the project needs (the ones that appear on the .csproj file on the root folder, if you need to know the specific versions of each package you can check them in the .csproj file) by executing the command:
     ```bash
     dotnet restore
     ```
