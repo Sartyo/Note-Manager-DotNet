@@ -16,12 +16,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 var env = builder.Environment;
 
 builder.Services.AddDbContext<NoteManagerDbContext>(options =>
-    // Pomelo syntax
-    options.UseMySql(
-        connectionString, 
-        ServerVersion.AutoDetect(connectionString),
-        mysqlOptions => mysqlOptions.EnableRetryOnFailure()
-    )
+    // PostgreSQL database connection
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
 // --- 2. Services Configuration ---
