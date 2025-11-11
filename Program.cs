@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using NoteManagerDotNet.Models;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using NoteManagerDotNet.Services;
